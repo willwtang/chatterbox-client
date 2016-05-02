@@ -3,7 +3,13 @@ window.app = {};
 app.server = 'https://api.parse.com/1/classes/messages';
 
 app.init = function() {
+  $('#chats').on('click', '.username', function(event) {
+    app.addFriend($(this));
+  });
 
+  $('.submit').on('submit', function(event) {
+    app.handleSubmit();
+  });
 };
 
 app.send = function(message) {
@@ -40,7 +46,25 @@ app.clearMessages = function() {
 };
 
 app.addMessage = function(message) {
-  let messageString = message.username + ': ' + message.text;
-  let $message = $('<div>' + messageString + '</div>');
-  $('#chats').append($message);
+  let $chat = $(`<div class="chat"></div>`);
+  let $username = $(`<div class="username"> ${message.username} </div>`);
+  let $message = $(`<div class="text"> ${message.text} </div>`);
+
+  $chat.append($username);
+  $chat.append($message);
+  $('#chats').append($chat);
 };
+
+app.addRoom = function(roomName) {
+  let $roomOption = $(`<option> ${roomName} </option>`);
+  $('#roomSelect').append($roomOption);
+};
+
+app.addFriend = function($username) {
+  $username.toggleClass('friend');
+};
+
+app.handleSubmit = function() {
+  console.log('called');
+};
+
