@@ -15,7 +15,6 @@ app.init = function() {
   app.fetchRooms();
 
   $('#chats').on('click', '.username', function(event) {
-    console.log('toggled');
     app.toggleFriend($(this).text());
     app.highlightFriends();
   });
@@ -84,6 +83,8 @@ app.fetchRooms = function() {
 
       let roomnames = Object.keys(app.rooms);
       app.updateRooms(roomnames);
+
+      $('#room').val(app.currentRoom);
     },
     dataType: 'json'
   });
@@ -115,6 +116,7 @@ app.updateRooms = function(roomnames) {
   let roomSelect = d3.select('#roomSelect').selectAll('option').data(roomnames);
 
   roomSelect.enter().append('option').text(roomname => roomname);
+  roomSelect.select('option').text(roomname => roomname);
   roomSelect.exit().remove();
 };
 
