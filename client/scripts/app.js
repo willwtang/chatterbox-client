@@ -32,12 +32,10 @@ app.init = function() {
     app.refresh();
   });
 
-  // setInterval( app.refresh, 2000 );
+  setInterval( app.refresh, 1000 );
 };
 
 app.refresh = function() {
-  app.clearMessages();
-  app.clearRooms();
   app.fetchMessages();
   app.fetchRooms();
 };
@@ -77,22 +75,19 @@ app.fetchRooms = function() {
     url: app.server,
     data: 'keys=roomname',
     success: function (data) {
+      // build up hash of all rooms
       _.each(data.results, function(message) {
         app.rooms[message.roomname] = true;
       });
 
-      for (let roomname in app.rooms) {
-        app.addRoom(roomname);
-      }
+      let roomnames = Object.keys(app.rooms);
+      app.updateRooms(roomnames);
+
       $('#roomSelect').val(app.currentRoom);
       $('#room').val(app.currentRoom);
     },
     dataType: 'json'
   });
-};
-
-app.clearMessages = function() {
-  $('#chats').empty();
 };
 
 app.updateMessages = function(data) {
@@ -101,7 +96,6 @@ app.updateMessages = function(data) {
 
   // Append new messages
   let newChats = chats.enter().insert('div', ":first-child").attr('class', 'chat');
-  console.log(newChats);
   newChats.append('div').attr('class', 'username')
     .text(data => data.username);
   newChats.insert('div').attr('class', 'timestamp')
@@ -116,6 +110,13 @@ app.updateMessages = function(data) {
 
   // Remove elements
   chats.exit().remove();
+};
+
+app.updateRooms = function(roomnames) {
+  let roomSelect = d3.select('#roomSelect').selectAll('option').data(roomnames);
+
+  roomSelect.enter().append('option').text(roomname => roomname);
+  roomSelect.exit().remove();
 };
 
 app.clearRooms = function() {
