@@ -5,6 +5,8 @@ $(document).ready(function() {
 });
 
 window.app = {};
+app.rooms = {};
+app.currentRoom = 'main';
 app.server = 'https://api.parse.com/1/classes/messages';
 
 app.init = function() {
@@ -19,9 +21,20 @@ app.init = function() {
   });
 
   $('.refresh').on('click', function(event) {
-    app.clearMessages();
-    app.fetch();
+    app.refresh();
   });
+
+  $('#roomSelect').on('change', function(event) {
+    app.currentRoom = $('#roomSelect').val();
+    app.refresh();
+  });
+};
+
+app.refresh = function() {
+  app.clearMessages();
+  app.clearRooms();
+  //console.log('Room is ' + room);
+  app.fetch();
 };
 
 app.send = function(message) {
@@ -47,19 +60,25 @@ app.fetch = function() {
     url: app.server,
     success: function (data) {
       // console.log('chatterbox: GET success');
-      var rooms = {};
-      _.each(data.results, function(message) {
-        for (var property in message) {
+      let filteredData = _.filter(data.results, function(element) { 
+        return element.roomname === app.currentRoom;
+      });
+
+      _.each(filteredData, function(message) {
+        for (let property in message) {
           message[property] = _.escape(message[property]);
         }
-
         app.addMessage(message);
-        rooms[message.roomname] = true;
       });
       
-      for (var roomname in rooms) {
+      _.each(data.results, function(message) {
+        app.rooms[message.roomname] = true;
+      });
+
+      for (let roomname in app.rooms) {
         app.addRoom(roomname);
       }
+      $('#roomSelect').val(app.currentRoom);
     },
     dataType: 'json'
   });
@@ -79,8 +98,12 @@ app.addMessage = function(message) {
   $('#chats').append($chat);
 };
 
-app.addRoom = function(roomName) {
-  let $roomOption = $(`<option> ${roomName} </option>`);
+app.clearRooms = function() {
+  $('#roomSelect').empty();
+};
+
+app.addRoom = function(room) {
+  let $roomOption = $(`<option value="${room}"> ${room} </option>`);
   $('#roomSelect').append($roomOption);
 };
 
@@ -92,10 +115,9 @@ app.handleSubmit = function() {
   let message = {
     username: $('#username').val(),
     text: $('#message').val(),
-    roomname: 'lobby'
+    roomname: app.currentRoom
   };
 
   app.send(message);
-  app.clearMessages();
-  app.fetch();
+  app.refresh();
 };
