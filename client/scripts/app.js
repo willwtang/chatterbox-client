@@ -11,7 +11,8 @@ app.server = 'https://api.parse.com/1/classes/messages';
 app.friends = {};
 
 app.init = function() {
-  app.fetch();
+  app.fetchMessages();
+  app.fetchRooms();
 
   $('#chats').on('click', '.username', function(event) {
     app.toggleFriend($(this).text());
@@ -35,8 +36,8 @@ app.init = function() {
 app.refresh = function() {
   app.clearMessages();
   app.clearRooms();
-  //console.log('Room is ' + room);
-  app.fetch();
+  app.fetchMessages();
+  app.fetchRooms();
 };
 
 app.send = function(message) {
@@ -57,22 +58,28 @@ app.send = function(message) {
   });
 };
 
-app.fetch = function() {
+app.fetchMessages = function() {
   $.ajax({
     url: app.server,
+    data: `where={ "roomname": "${app.currentRoom}" }`,
     success: function (data) {
-      // console.log('chatterbox: GET success');
-      let filteredData = _.filter(data.results, function(element) { 
-        return element.roomname === app.currentRoom;
-      });
-
-      _.each(filteredData, function(message) {
+      _.each(data.results, function(message) {
         for (let property in message) {
           message[property] = message[property];
         }
         app.addMessage(message);
       });
-      
+    },
+    dataType: 'json'
+  });
+};
+
+app.fetchRooms = function() {
+  app.rooms = {};
+  $.ajax({
+    url: app.server,
+    data: 'keys=roomname',
+    success: function (data) {
       _.each(data.results, function(message) {
         app.rooms[message.roomname] = true;
       });
