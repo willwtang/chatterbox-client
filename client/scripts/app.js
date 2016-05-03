@@ -1,14 +1,26 @@
 // YOUR CODE HERE:
+
+$(document).ready(function() {
+  app.init();
+});
+
 window.app = {};
 app.server = 'https://api.parse.com/1/classes/messages';
 
 app.init = function() {
+  app.fetch();
+
   $('#chats').on('click', '.username', function(event) {
     app.addFriend($(this));
   });
 
-  $('.submit').on('submit', function(event) {
+  $('.submit').on('click', function(event) {
     app.handleSubmit();
+  });
+
+  $('.refresh').on('click', function(event) {
+    app.clearMessages();
+    app.fetch();
   });
 };
 
@@ -35,7 +47,15 @@ app.fetch = function() {
     url: app.server,
     success: function (data) {
       console.log('chatterbox: GET success');
-      console.log(data);
+
+      for (let i = 0; i < data.results.length; i++) {
+        let message = data.results[i];
+        for (var property in message) {
+          message[property] = _.escape(message[property]);
+        }
+
+        app.addMessage(data.results[i]);
+      }
     },
     dataType: 'json'
   });
@@ -67,4 +87,3 @@ app.addFriend = function($username) {
 app.handleSubmit = function() {
   console.log('called');
 };
-
