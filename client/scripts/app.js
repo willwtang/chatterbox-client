@@ -8,12 +8,14 @@ window.app = {};
 app.rooms = {};
 app.currentRoom = 'main';
 app.server = 'https://api.parse.com/1/classes/messages';
+app.friends = {};
 
 app.init = function() {
   app.fetch();
 
   $('#chats').on('click', '.username', function(event) {
-    app.addFriend($(this));
+    app.toggleFriend($(this).text());
+    app.refresh();
   });
 
   $('.submit').on('click', function(event) {
@@ -90,8 +92,13 @@ app.clearMessages = function() {
 
 app.addMessage = function(message) {
   let $chat = $(`<div class="chat"></div>`);
-  let $username = $(`<div class="username"> ${message.username} </div>`);
-  let $message = $(`<div class="text"> ${message.text} </div>`);
+  let $username = $(`<div class="username">${message.username}</div>`);
+  let $message = $(`<div class="text">${message.text}</div>`);
+
+  if (message.username in app.friends) {
+    $username.addClass('friend');
+    $message.addClass('friend-message');
+  }
 
   $chat.append($username);
   $chat.append($message);
@@ -107,8 +114,12 @@ app.addRoom = function(room) {
   $('#roomSelect').append($roomOption);
 };
 
-app.addFriend = function($username) {
-  $username.toggleClass('friend');
+app.toggleFriend = function(username) {
+  if ( app.friends[username] ) {
+    delete app.friends[username];
+  } else {
+    app.friends[username] = true;
+  }
 };
 
 app.handleSubmit = function() {
