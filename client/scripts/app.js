@@ -31,6 +31,8 @@ app.init = function() {
     app.currentRoom = $('#roomSelect').val();
     app.refresh();
   });
+
+  // setInterval( app.refresh, 2000 );
 };
 
 app.refresh = function() {
@@ -63,13 +65,7 @@ app.fetchMessages = function() {
     url: app.server,
     data: `where={ "roomname": "${app.currentRoom}" }`,
     success: function (data) {
-      window.test = data;
-      _.each(data.results, function(message) {
-        for (let property in message) {
-          message[property] = message[property];
-        }
-        app.addMessage(message);
-      });
+      app.updateMessages(data.results);
     },
     dataType: 'json'
   });
@@ -99,24 +95,27 @@ app.clearMessages = function() {
   $('#chats').empty();
 };
 
-app.addMessage = function(message) {
-  let $username = $(`<div class="username"></div>`);
-  $username.text(message.username);
-  let $timestamp = $(`<div class="timestamp"></div>`);
-  $timestamp.text($.timeago(message.createdAt));
-  let $message = $(`<div class="text"></div>`);
-  $message.text(message.text);
+app.updateMessages = function(data) {
+  let chats = d3.select('#chats')
+    .selectAll('.chat').data(data, data => data.objectId);
 
-  if (message.username in app.friends) {
-    $username.addClass('friend');
-    $message.addClass('friend-message');
-  }
+  // Append new messages
+  let newChats = chats.enter().insert('div', ":first-child").attr('class', 'chat');
+  console.log(newChats);
+  newChats.append('div').attr('class', 'username')
+    .text(data => data.username);
+  newChats.insert('div').attr('class', 'timestamp')
+    .text(data => $.timeago(data.createdAt));
+  newChats.insert('div').attr('class', 'message')
+    .text(data => data.text);
 
-  let $chat = $(`<div class="chat"></div>`);
-  $chat.append($username);
-  $chat.append($timestamp);
-  $chat.append($message);
-  $('#chats').prepend($chat);
+  // Update existing chats
+  chats.select('.username').text(data => data.username);
+  chats.select('.timestamp').text(data => $.timeago(data.createdAt));
+  chats.select('.message').text(data => data.text);
+
+  // Remove elements
+  chats.exit().remove();
 };
 
 app.clearRooms = function() {
