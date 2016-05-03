@@ -15,8 +15,9 @@ app.init = function() {
   app.fetchRooms();
 
   $('#chats').on('click', '.username', function(event) {
+    console.log('toggled');
     app.toggleFriend($(this).text());
-    app.refresh();
+    app.highlightFriends();
   });
 
   $('.submit').on('click', function(event) {
@@ -38,6 +39,7 @@ app.init = function() {
 app.refresh = function() {
   app.fetchMessages();
   app.fetchRooms();
+  app.highlightFriends();
 };
 
 app.send = function(message) {
@@ -82,9 +84,6 @@ app.fetchRooms = function() {
 
       let roomnames = Object.keys(app.rooms);
       app.updateRooms(roomnames);
-
-      $('#roomSelect').val(app.currentRoom);
-      $('#room').val(app.currentRoom);
     },
     dataType: 'json'
   });
@@ -119,21 +118,24 @@ app.updateRooms = function(roomnames) {
   roomSelect.exit().remove();
 };
 
-app.clearRooms = function() {
-  $('#roomSelect').empty();
-};
-
-app.addRoom = function(room) {
-  let $roomOption = $(`<option value="${room}"> ${room} </option>`);
-  $('#roomSelect').append($roomOption);
-};
-
 app.toggleFriend = function(username) {
   if ( app.friends[username] ) {
     delete app.friends[username];
   } else {
     app.friends[username] = true;
   }
+};
+
+app.highlightFriends = function() {
+  $('.chat').each(function() {
+    if ($(this).find('.username').text() in app.friends) {
+      $(this).find('.username').addClass('friend');
+      $(this).find('.message').addClass('friend-message');
+    } else {
+      $(this).find('.username').removeClass('friend');
+      $(this).find('.message').removeClass('friend-message');
+    }
+  });
 };
 
 app.handleSubmit = function() {
