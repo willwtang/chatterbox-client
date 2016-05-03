@@ -32,12 +32,12 @@ app.send = function(message) {
     data: JSON.stringify(message),
     contentType: 'application/json',
     success: (data) => {
-      console.log('chatterbox: POST success');
-      console.log(data);
+      // console.log('chatterbox: POST success');
+      // console.log(data);
     },
     error: (data) => {
       // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
-      console.error('chatterbox: Failed to send message', data);
+      // console.error('chatterbox: Failed to send message', data);
     }
   });
 };
@@ -46,15 +46,19 @@ app.fetch = function() {
   $.ajax({
     url: app.server,
     success: function (data) {
-      console.log('chatterbox: GET success');
-
-      for (let i = 0; i < data.results.length; i++) {
-        let message = data.results[i];
+      // console.log('chatterbox: GET success');
+      var rooms = {};
+      _.each(data.results, function(message) {
         for (var property in message) {
           message[property] = _.escape(message[property]);
         }
 
-        app.addMessage(data.results[i]);
+        app.addMessage(message);
+        rooms[message.roomname] = true;
+      });
+      
+      for (var roomname in rooms) {
+        app.addRoom(roomname);
       }
     },
     dataType: 'json'
@@ -85,5 +89,13 @@ app.addFriend = function($username) {
 };
 
 app.handleSubmit = function() {
-  console.log('called');
+  let message = {
+    username: $('#username').val(),
+    text: $('#message').val(),
+    roomname: 'lobby'
+  };
+
+  app.send(message);
+  app.clearMessages();
+  app.fetch();
 };
