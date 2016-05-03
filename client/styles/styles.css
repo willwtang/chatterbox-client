@@ -69,6 +69,14 @@ form input[type=text] {
     font-weight: 800;
 }
 
+.chat .timestamp {
+    font-size: 14px;
+}
+
+.chat .message {
+
+}
+
 .chat:hover {
     background-color: #ddd;
 }

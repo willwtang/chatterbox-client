@@ -63,6 +63,7 @@ app.fetchMessages = function() {
     url: app.server,
     data: `where={ "roomname": "${app.currentRoom}" }`,
     success: function (data) {
+      window.test = data;
       _.each(data.results, function(message) {
         for (let property in message) {
           message[property] = message[property];
@@ -99,9 +100,10 @@ app.clearMessages = function() {
 };
 
 app.addMessage = function(message) {
-  let $chat = $(`<div class="chat"></div>`);
   let $username = $(`<div class="username"></div>`);
   $username.text(message.username);
+  let $timestamp = $(`<div class="timestamp"></div>`);
+  $timestamp.text($.timeago(message.createdAt));
   let $message = $(`<div class="text"></div>`);
   $message.text(message.text);
 
@@ -110,9 +112,11 @@ app.addMessage = function(message) {
     $message.addClass('friend-message');
   }
 
+  let $chat = $(`<div class="chat"></div>`);
   $chat.append($username);
+  $chat.append($timestamp);
   $chat.append($message);
-  $('#chats').append($chat);
+  $('#chats').prepend($chat);
 };
 
 app.clearRooms = function() {
