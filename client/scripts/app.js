@@ -68,7 +68,7 @@ app.fetch = function() {
 
       _.each(filteredData, function(message) {
         for (let property in message) {
-          message[property] = _.escape(message[property]);
+          message[property] = message[property];
         }
         app.addMessage(message);
       });
@@ -81,6 +81,7 @@ app.fetch = function() {
         app.addRoom(roomname);
       }
       $('#roomSelect').val(app.currentRoom);
+      $('#room').val(app.currentRoom);
     },
     dataType: 'json'
   });
@@ -92,8 +93,10 @@ app.clearMessages = function() {
 
 app.addMessage = function(message) {
   let $chat = $(`<div class="chat"></div>`);
-  let $username = $(`<div class="username">${message.username}</div>`);
-  let $message = $(`<div class="text">${message.text}</div>`);
+  let $username = $(`<div class="username"></div>`);
+  $username.text(message.username);
+  let $message = $(`<div class="text"></div>`);
+  $message.text(message.text);
 
   if (message.username in app.friends) {
     $username.addClass('friend');
@@ -123,12 +126,13 @@ app.toggleFriend = function(username) {
 };
 
 app.handleSubmit = function() {
+  app.currentRoom = $('#room').val();
   let message = {
     username: $('#username').val(),
     text: $('#message').val(),
     roomname: app.currentRoom
   };
-
+  
   app.send(message);
   app.refresh();
 };
