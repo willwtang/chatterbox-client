@@ -1,101 +1,127 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:300,400);
+
 body {
-    background: #eee;
+    background: #E7F5FE;
+    color: rgb(40, 40, 60);
+    font-family: 'Lato', sans-serif;
     text-align: center;
-    padding: 0 25px;
-    font-family: arial, sans-serif;
+    font-weight: 300;
+    letter-spacing: 1px;
 }
 
-#main, #chats {
-    width: 500px;
-    margin: auto;
-    text-align: left;
-    background: white;
-    padding: 50px 60px;
-    border: solid #ddd;
-    border-width: 0 1px 1px 1px;
-}
-
-#main h1 {
-    margin-top: 0;
+.title {
     font-size: 35px;
-    margin-bottom: 5px;
-    padding: 5px;
+    text-transform: uppercase;
+    letter-spacing: 8px;
+    margin-top: 3.5%;
+    padding-top: 40px;
 }
 
-#main h1 span {
-    font-style:italic;
-}
-
-#main ul {
-    padding-left: 20px;
-}
-
-#main .error {
-    border: 1px solid red;
-    background: #FDEFF0;
-    padding: 20px;
-}
-
-#main .success {
-    margin-top: 25px;
-}
-
-#main .success code {
-    font-size: 12px;
-    color: green;
-    line-height: 13px;
-}
-
-form {
-    padding: 20px;
-    padding-left: 0;
-    margin-bottom: 20px;
-}
-
-form input[type=text] {
-    margin-right: 10px;
-    width: 70%;
-    font-size: 12px;
-    padding: 5px;
-}
-
-.chat {
-    padding: 5px;
-    margin-bottom: 5px;
-    background-color: #eee;
-}
-
-.chat .username {
-    font-weight: 800;
-}
-
-.chat .timestamp {
-    font-size: 14px;
-}
-
-.chat .message {
-
-}
-
-.chat:hover {
-    background-color: #ddd;
-}
-
-.spinner {
-    float: right;
-    height: 46px;
-    margin-bottom: 5px;
-}
-
-.spinner img {
-    padding: 10px;
-}
-
-.friend {
-    color: red;
-}
-
-.friend-message {
+.subtitle {
     font-size: 20px;
+    margin: 35px auto 10px;
 }
 
+#roomSelect {
+    -webkit-appearance: none;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    padding: 5px 15px;
+    border-radius: 0;
+    border-width: 2px;
+    border-color: #cfcfcf;
+    letter-spacing: .5px;
+    outline: none;
+    transition: all .25s ease-in-out;
+}
+
+#roomSelect:focus {
+    border-color: #6acab8;
+}
+
+#send {
+    margin: 0 auto 45px;
+}
+
+#send .input-descriptor {
+    font-size: 12px;
+}
+
+#send .input-field input {
+    outline: none;
+    font-size: 14px;
+    font-family: 'Lato', sans-serif;
+    padding: 7px;
+    transition: all .25s ease-in-out;
+    border-style: solid;
+    border-color: #cfcfcf;
+    letter-spacing: .5px;
+    margin: 5px 0 15px;
+}
+
+#send .input-field input#message {
+    font-size: 16px;
+    height: 40px;
+    width: 300px;
+}
+
+#send .input-field input:focus {
+    border-color: #6acab8;
+}
+
+#send input.submit {
+    font-family: 'Lato', sans-serif;
+    letter-spacing: 2px;
+    background-color: #6acab8;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    padding: 12px 32px;
+    text-decoration: none;
+    text-transform: uppercase;
+    display: inline-block;
+    outline: none;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all .25s ease-in-out;
+}
+
+#send input.submit:hover {
+    background-color: #44bda6;
+}
+
+#chats {
+
+}
+
+#chats .chat {
+    margin: 10px auto;
+    padding: 10px;
+    width: 450px;
+    background-color: white;
+    border-radius: 8px;
+}
+
+#chats .chat .username {
+    font-weight: 400;
+    font-size: 16px;
+}
+
+#chats .chat .timestamp {
+    font-size: 12px;
+    padding: 2px 0;
+}
+
+#chats .chat .message {
+    padding: 5px 0 3px;
+    font-size: 20px
+}
+
+
+#chats .chat .username.friend {
+    color: #44bda6;
+}
+
+#chats .chat .message.friend-message {
+    color: #44bda6;
+}

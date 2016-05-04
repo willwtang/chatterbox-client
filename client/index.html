@@ -17,16 +17,31 @@
   </head>
   <body>
     <div id="main">
-      <h1>chooterboox</h1>
+      <h1 class="title">chooterboox</h1>
+
+      <h2 class="subtitle">Current Room</h2>
       <select id="roomSelect"></select>
+
+      <h2 class="subtitle">Send a message</h2>
       <div id="send">
-        <input type="text" id="room" placeholder="Enter the room!"></input>
-        <input type="text" id="username" placeholder="Enter your username!"></input>
-        <input type="text" id="message" placeholder="Enter a message!"></input>
-        <input type="submit" class="submit" value="Soobmit!"></input>
+        <div class="input-field">
+          <div class="input-descriptor">Room</div>
+          <input type="text" id="room" placeholder="Enter the room!"></input>
+        </div>
+        <div class="input-field">
+          <div class="input-descriptor">Username</div>
+          <input type="text" id="username" placeholder="Enter your username!"></input>
+        </div>
+        <div class="input-field">
+          <div class="input-descriptor">Message</div>
+          <input type="text" id="message" placeholder="Enter a message!"></input>
+        </div>
+        <div>
+          <input type="submit" class="submit" value="submit"></input>
+        </div>
       </div>
-      <button class="refresh">Refresh!</button>
     </div>
+
     <div id="chats"></div>
   </body>
 </html>

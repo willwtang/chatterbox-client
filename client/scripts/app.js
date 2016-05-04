@@ -20,10 +20,12 @@ app.init = function() {
   });
 
   $('.submit').on('click', function(event) {
-    app.handleSubmit();
+    if ($('#username').val() !== '' && $('#message').val() !== '') {
+      app.handleSubmit();
+    }
   });
 
-  $('.refresh').on('click', function(event) {
+  $('.refresh-button').on('click', function(event) {
     app.refresh();
   });
 
